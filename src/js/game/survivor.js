@@ -16,12 +16,15 @@ var Survivor = BaseClass.extend({
   water: 100,
 
   coordinate: 16,
+  //targetCoordinate: -1,
 
   next_events: [],
 
+  is_active: false,
+
 
   init(name) {
-    console.log(`hello, my name is ${name}`);
+    // console.log(`hello, my name is ${name}`);
     this.name = name;
     this.fishing = 1 + parseInt(Math.random() * 3);
     this.fruit_picking = 7 + parseInt(Math.random() * 3);
@@ -40,12 +43,14 @@ var Survivor = BaseClass.extend({
     d.render();
 
     //console.log(11);
+    // console.log('coordinate ' + this.coordinate);
     gmap.set_by_index(this.coordinate, this);
     gmap.display();
   },
 
   move_to(coord) {
-    console.log('move_to');
+    //this.targetCoordinate = coord;
+    // console.log('move_to');
     //this.name = 'name ' + parseInt(Math.random(1) * 100);
 
     //console.log(this.coordinate);
@@ -61,8 +66,8 @@ var Survivor = BaseClass.extend({
     let coord_x = GameMapHelper.index_to_x(this.coordinate);
     let coord_y = GameMapHelper.index_to_y(this.coordinate);
 
-    console.log(x + ':' + y);
-    console.log(coord_x + ':' + coord_y);
+    // console.log(x + ':' + y);
+    // console.log(coord_x + ':' + coord_y);
 
     let plus_coord_x  = GameMapHelper.x_y_to_index(1, 0);
     let minus_coord_x = - plus_coord_x;
@@ -96,36 +101,14 @@ var Survivor = BaseClass.extend({
         //G.next_turn_event(() => this.coord_y -= 1);
       }
     }
-    // if (coord_x < x && coord_y < y) {
-    //   this.next_event = () => {this.coord_x += 1; this.coord_y += 1; console.log(this); }
-    //   //G.next_turn_event(() => {this.coord_x += 1; this.coord_y += 1});
-    // } else if (coord_x > x && coord_y > y) {
-    //   this.next_event = () => {this.coord_x -= 1; this.coord_y -= 1}
-    //   //G.next_turn_event(() => {this.coord_x -= 1; this.coord_y -= 1});
-    // } else {
-    //   if (coord_x < x) { 
-    //     this.next_event = () => this.coord_x += 1;
-    //     //G.next_turn_event(() => this.coord_x += 1);
-    //   } else if (coord_x > x) {
-    //     this.next_event = () => this.coord_x -= 1;
-    //     //G.next_turn_event(() => this.coord_x -= 1);
-    //   } else if (coord_y < y) {
-    //     this.next_event = () => this.coord_y += 1;
-    //     //G.next_turn_event(() => this.coord_y += 1);
-    //   } else if (coord_y > y) {
-    //     this.next_event = () => this.coord_y -= 1;
-    //     //G.next_turn_event(() => this.coord_y -= 1);
-    //   }
-    // }
-    //console.log(x + ':' + y);
-    //console.log(coord_x + ':' + coord_y);
 
     if (x == coord_x && y == coord_y) {
-      console.log('stop');
+      // console.log('stop');
+      //this.targetCoordinate = -1;
     } else {
-      console.log('next move');
+      // console.log('next move');
       this.next_events.push(() => {this.move_to(coord)});
-      this.next_events.push(() => {this.display()});
+      //this.next_events.push(() => {this.display()});
       //G.next_turn_event(() =>this.move_to(x, y));
     }
   }
@@ -135,7 +118,30 @@ var SurvivorDisplay = BaseClass.extend({
   init(survivor) {
     this.base = survivor;
     this.name = `s${this.base.name}`
-    this.element = document.getElementsByClassName(this.name)[0];
+    this.dom_element = document.getElementById(this.name);
+  },
+  handleEvent(event) {
+    this.target_element = event.target || event.srcElement;
+    // console.log(this.target_element.type);
+    if (11 || event.type == 'click' && this.target_element.type != 'submit') {
+      //console.log(this.target_element.id);
+
+      document.querySelectorAll('.s').forEach(el => el.classList.remove('active'));
+      //document.getElementsByClassName('map')[0].classList.remove('moveOn');
+      document.getElementById('map').querySelectorAll('td').forEach(el => el.classList.remove('moveTarget'));
+      
+      this.dom_element.classList.add('active');
+      //if (this.base.targetCoordinate > 0 && this.mapCellEl) {
+      //console.log(this.mapCellEl);
+
+      //document.getElementById('map').querySelectorAll('td').forEach(el => el.classList.remove('moveTarget'));
+      if (this.mapCellEl && this.mapCellEl.target_element) {
+        //console.log(this.mapCellEl.target_element);
+        this.mapCellEl.target_element.classList.add('moveTarget');
+        //console.log('ollooo');
+      }
+      // .is_active ????
+    }
   },
   render() {
     //console.log(this.name);
@@ -158,20 +164,28 @@ var SurvivorDisplay = BaseClass.extend({
        html += '<div class="empty">Empty</div>'
       html += '</div>';
     }
-    this.element.innerHTML = html;
+    this.dom_element.innerHTML = html;
+    if (this.base.is_active) {
+      this.dom_element.classList.add('active');
+    }
 
     this.moveButtonEl = new MoveElementClass(this);
-    this.element.getElementsByClassName('move')[0].addEventListener("click", this.moveButtonEl);
+    this.dom_element.getElementsByClassName('move')[0].addEventListener("click", this.moveButtonEl);
+
+    this.dom_element.addEventListener("click", this);
   }
 });
 
 var MoveElementClass = BaseClass.extend({
   init(survivorDisplay) {
     this.base_element = survivorDisplay;
-    this.dom_element = document.getElementsByClassName('move')[0];
+    this.base_dom_element = this.base_element.dom_element;
+    this.dom_element = this.base_dom_element.getElementsByClassName('move')[0];
+    // console.log(this.base_element.name);
   },
   handleEvent(event) {
-    console.log(event.type);
+    // console.log(event.type);
+    // console.log(this.base_element.name);
     if (event.type == 'click') {
       this.base_element.base.next_events = [];
 
@@ -179,11 +193,11 @@ var MoveElementClass = BaseClass.extend({
 
       this.dom_element.removeEventListener("click", this.base_element.moveButtonEl);
 
-      document.getElementsByClassName('map')[0].classList.add('moveOn');
-      document.getElementsByClassName('map')[0].querySelectorAll('td').forEach(el => el.classList.remove('moveTarget'));
+      document.getElementById('map').classList.add('moveOn');
+      document.getElementById('map').querySelectorAll('td').forEach(el => el.classList.remove('moveTarget'));
 
       this.base_element.mapCellEl = new MapCellElementClass(this.base_element);
-      document.getElementsByClassName('map')[0].querySelectorAll('td').forEach(el => el.addEventListener("click", this.base_element.mapCellEl));
+      document.getElementById('map').querySelectorAll('td').forEach(el => el.addEventListener("click", this.base_element.mapCellEl));
     }
   }
 });
@@ -191,10 +205,13 @@ var MoveElementClass = BaseClass.extend({
 var MapCellElementClass = BaseClass.extend({
   init(survivorDisplay) {
     this.base_element = survivorDisplay;
-    this.dom_element_arr = document.getElementsByClassName('map')[0].querySelectorAll('td');
+    this.base_dom_element = this.base_element.dom_element;
+    this.dom_element_arr = document.getElementById('map').querySelectorAll('td');
+    // console.log(this.base_element.name);
   },
   handleEvent(event) {
-    console.log(event.type);
+    // console.log(event.type);
+    // console.log(this.base_element.name);
     if (event.type == 'click') {
       this.target_element = event.target || event.srcElement;
 //        console.log(targetElement);
@@ -202,8 +219,8 @@ var MapCellElementClass = BaseClass.extend({
       document.getElementsByClassName('map')[0].classList.remove('moveOn');
       this.dom_element_arr.forEach(el => el.removeEventListener("click", this.base_element.mapCellEl));
 
-      document.getElementsByClassName('move')[0].removeAttribute('disabled');
-      document.getElementsByClassName('move')[0].addEventListener("click", this.base_element.moveButtonEl);
+      this.base_dom_element.getElementsByClassName('move')[0].removeAttribute('disabled');
+      this.base_dom_element.getElementsByClassName('move')[0].addEventListener("click", this.base_element.moveButtonEl);
 
       this.target_element.classList.add('moveTarget');
 
@@ -213,34 +230,13 @@ var MapCellElementClass = BaseClass.extend({
       this.base_element.base.move_to(this.target_element.getAttribute('data-index'));
     }
   }
-}); 
+});
 
-// function handler() {
-//   //alert( 'Спасибо!' );
-//   console.log(this);
-//   console.log(obj);
-//   this.setAttribute("disabled", "disabled");
-
-//   document.getElementsByClassName('move')[0].removeEventListener("click", handler);
-
-//   document.getElementsByClassName('map')[0].classList.add('moveOn');
-//   document.getElementsByClassName('map')[0].querySelectorAll('td').forEach(el => el.addEventListener("click", clickHandler));
-//   document.getElementsByClassName('map')[0].querySelectorAll('td').forEach(el => el.classList.remove('moveTarget'));
-// }
-
-// function clickHandler() {
-//   console.log(this);
-//   document.getElementsByClassName('map')[0].classList.remove('moveOn');
-//   document.getElementsByClassName('map')[0].querySelectorAll('td').forEach(el => el.removeEventListener("click", clickHandler));
-
-//   document.getElementsByClassName('move')[0].removeAttribute('disabled');
-//   document.getElementsByClassName('move')[0].addEventListener("click", handler);
-
-
-//   this.classList.add('moveTarget');
-// }
-
-// ....
-//document.getElementsByClassName('move')[0].removeEventListener("click", handler);
+// var SurvivorProfileElementClass = BaseClass.extend({
+//   init(survivorDisplay) {
+//     this.base_element = survivorDisplay;
+//     this.dom_element_arr = document.getElementById('map').querySelectorAll('td');
+//   },
+// }); 
 
 export default Survivor;

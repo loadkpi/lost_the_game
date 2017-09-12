@@ -10,6 +10,15 @@ class GameMapHelper {
   static index_to_y(index) {
     return index % 7;
   }
+  static indexes_interval(x1, y1, x2, y2) {
+    let ii = [];
+    for (let x = x1; x <= x2; x++) {
+      for (let y = y1; y <= y2; y++) {
+        ii.push( GameMapHelper.x_y_to_index(x, y) );
+      }
+    }
+    return ii;
+  }
 }
 
 var GameMapClass = BaseClass.extend({
@@ -19,23 +28,35 @@ var GameMapClass = BaseClass.extend({
   init() {
     //this.cells = new Map();
     //let map = new Map();
-    for(let i = 0; i < 48; i++) {
-      this.cells[i] = null;
-    }
+    // for(let i = 0; i < 48; i++) {
+    //   this.cells[i] = new Set();
+    // }
+    this.clear_cells();
   },
   
   get(x, y) {
     this.cells.get(this.x_y_to_index(x, y));  
   },
   set(x, y, val) {
-    this.cells.set(this.x_y_to_index(x, y), val);
+    this.cells.set_by_index(this.x_y_to_index(x, y), val);
   },
   set_by_index(index, val) {
-    this.cells.set(index, val);
+    //console.log(this.cells);
+    //console.log(this.cells[16]);
+    //console.log(index);
+    //console.log(this.cells[index]);
+    // console.log('set on ' + index);
+    // console.log(val);
+    this.cells.set(index, this.cells.get(index).add(val));
   },
 
   clear_cells() {
+    // console.log('clear');
     this.cells.clear();
+    for(let i = 0; i < 48; i++) {
+      this.cells.set(i, new Set());
+    }
+    // console.log(this.cells);
   },
 
   x_y_to_index(x, y) {
@@ -81,11 +102,13 @@ var GameMapDisplay  = BaseClass.extend({
           td.setAttribute('data-index', index);
 
           let mapElement = this.base.cells.get(index);
-          if ( mapElement != null ) {
+          if ( mapElement ) {
+            let tdHtml = '';
+            mapElement.forEach( el => tdHtml += `<div class="mapel${el.name}">${el.name}</div>`)
             //console.log(11);
             //console.log(index);
             //console.log(mapElement);
-            td.innerHTML = `<div class="mapel${mapElement.name}">${mapElement.name}</div>`;
+            td.innerHTML = tdHtml;
           }
         }
     }

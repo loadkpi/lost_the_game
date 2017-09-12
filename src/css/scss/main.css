@@ -9,7 +9,10 @@
 .game .s {
   width: 120px;
   height: 300px;
-  border: 1px black solid; }
+  border: 1px black solid;
+  cursor: pointer; }
+  .game .s.active {
+    border: 3px green solid; }
   .game .s img {
     width: 100%; }
   .game .s .status {
