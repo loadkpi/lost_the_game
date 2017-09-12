@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    {{#if css}}
+      <style>
+        {{{ css }}}
+      </style>
+    {{else}}
+      <link rel="stylesheet" href="main.css">
+    {{/if}}
+  </head>
+  <body>
+    <div class="game">
+      <table>
+        <tr>
+          <td>
+            <div class="s sBob"></div>
+          </td>
+          <td rowspan="2" class="mapWrap">
+            <table class="map"></table>
+          </td>
+          <td>
+            <div class="s sTom"></div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="s sRob"></div>
+          </td>
+          <td>
+            <div class="s sMax"></div>
+          </td>
+        </tr>
+      </table>
+      <button id="nextTurn">Next Turn</button>
+    </div>
+    <a id="s1"></a>
+    <div class="my-anchor"></div>
+    {{#if js}}
+      <script>
+        {{{ js }}}
+      </script>
+    {{else}}
+      <script src='main.js'></script>
+    {{/if}}
+  </body>
+</html>
