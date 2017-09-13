@@ -6,12 +6,17 @@ const rename    = require('gulp-rename');
 const util      = require('gulp-util');
 const htmlmin   = require('gulp-htmlmin');
 const fs        = require('fs');
+const filter    = require('gulp-filter');
 
 module.exports = () => {
   gulp.task( 'zip', [ 'build', 'template' ], () => {
-    return gulp.src('./dist/index.min.html')
+    const htmlFilter = filter('**/*.html', {restore: true});
+
+    return gulp.src(['./dist/index.min.html', './dist/assets', , './dist/assets/*'])
+      .pipe( htmlFilter )
       .pipe( htmlmin({ collapseWhitespace: true }) )
       .pipe( rename('index.html') )
+      .pipe( htmlFilter.restore )
       .pipe( zip('game.zip') )
       .pipe( gulp.dest('dist') );
   });

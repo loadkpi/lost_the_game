@@ -1,36 +1,235 @@
-.game > table {
-  margin: 20px auto; }
-  .game > table td {
-    vertical-align: top;
-    width: 140px; }
-    .game > table td.mapWrap {
-      width: 800px; }
-
-.game .s {
-  width: 120px;
-  height: 300px;
-  border: 1px black solid;
-  cursor: pointer; }
-  .game .s.active {
-    border: 3px green solid; }
-  .game .s img {
-    width: 100%; }
-  .game .s .status {
-    border-top: 1px black solid;
-    border-bottom: 1px black solid;
-    padding: 10px 0; }
-  .game .s .actions {
-    padding: 10px 0; }
-  .game .s .bag {
-    padding: 10px 0; }
-
-.game .map td {
-  width: 100px;
-  height: 100px;
-  border: 1px dashed black;
-  box-sizing: border-box; }
-  .game .map td.moveTarget {
-    border: 3px orange solid; }
-
-.game .map.moveOn td:hover {
-  border: 3px orange solid; }
+.game {
+  background: #99b3cc;
+  background: #008080;
+  padding: 5px; }
+  .game .win {
+    background: #bfbfbf;
+    border: 1px solid;
+    border-top-color: #dfdfdf;
+    border-left-color: #dfdfdf;
+    border-right-color: #808080;
+    border-bottom-color: #808080;
+    box-shadow: 1px 1px 0 0 #000; }
+    .game .win .name {
+      margin: 2px 2px 0;
+      padding: 1px 2px;
+      color: #fff;
+      background: -webkit-linear-gradient(left, #7b7b7b, #adadad);
+      background: linear-gradient(to right, #7b7b7b, #adadad);
+      font-weight: bold;
+      font-size: 13px;
+      line-height: 16px; }
+  .game button {
+    -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: none;
+    font-size: 12px;
+    font-family: Tahoma, Verdana;
+    color: #070707;
+    background: #bfbfbf;
+    border: 1px solid;
+    border-top-color: #dfdfdf;
+    border-left-color: #dfdfdf;
+    border-right-color: #808080;
+    border-bottom-color: #808080;
+    box-shadow: 1px 1px 0 0 #000;
+    text-align: center;
+    outline: none;
+    padding: 4px;
+    cursor: default;
+    margin: 3px 1px; }
+  .game button:enabled {
+    color: #070707; }
+  .game button:disabled {
+    color: #818181;
+    text-shadow: 1px 1px #fff; }
+  .game button:active:enabled {
+    box-shadow: 1px 1px 0 0 #000 inset;
+    border-top-color: #808080;
+    border-left-color: #808080;
+    border-right-color: #dfdfdf;
+    border-bottom-color: #dfdfdf; }
+  .game > table {
+    margin: 0 auto; }
+    .game > table td {
+      vertical-align: top;
+      width: 140px; }
+      .game > table td.mapWrap {
+        width: 800px;
+        background: #99b3cc; }
+  .game .s {
+    width: 160px;
+    height: 320px;
+    cursor: pointer;
+    font-size: 13px;
+    line-height: 16px;
+    margin: 0 4px; }
+    .game .s.active .name {
+      background: -webkit-linear-gradient(left, #000080, #1084d0);
+      background: linear-gradient(to right, #000080, #1084d0); }
+    .game .s img {
+      width: 100%; }
+    .game .s .status {
+      margin-top: -15px;
+      border-bottom: 1px black solid; }
+      .game .s .status .job {
+        border-bottom: 1px black solid;
+        line-height: 20px; }
+    .game .s .actions {
+      padding: 10px 0; }
+    .game .s .bag {
+      padding: 10px 0;
+      border-top: 1px black solid; }
+      .game .s .bag .bFruits {
+        background: url("./../assets/banana.png");
+        background-size: contain;
+        background-repeat: no-repeat;
+        width: 20px;
+        height: 20px;
+        padding-left: 8px;
+        position: relative;
+        line-height: 60px;
+        margin: 3px 10px;
+        display: inline-block; }
+      .game .s .bag .bFish {
+        background: url("./../assets/fish2.png");
+        background-size: contain;
+        background-repeat: no-repeat;
+        width: 20px;
+        height: 20px;
+        padding-left: 8px;
+        position: relative;
+        line-height: 60px;
+        margin: 3px 10px;
+        display: inline-block; }
+      .game .s .bag .bWater {
+        background: url("./../assets/water.png");
+        background-size: contain;
+        background-repeat: no-repeat;
+        width: 20px;
+        height: 20px;
+        padding-left: 8px;
+        position: relative;
+        line-height: 60px;
+        margin: 3px 10px;
+        display: inline-block; }
+  .game #map {
+    z-index: 100;
+    position: relative;
+    margin: 0 auto; }
+    .game #map td {
+      width: 100px;
+      height: 100px;
+      border: 1px dashed brown;
+      box-sizing: border-box;
+      position: relative; }
+      .game #map td.moveTarget {
+        border: 3px orange solid; }
+    .game #map.moveOn td:hover {
+      border: 3px orange solid; }
+    .game #map .mapelBob, .game #map .mapelTom, .game #map .mapelRon, .game #map .mapelMax {
+      background: url("./../assets/man.png");
+      /*
+      width: 32px;
+      height: 32px;
+      background-size: contain;
+      display: inline-block;
+      /* padding-top: 26px; 
+      line-height: 70px;
+      padding-left: 2px;
+      position: absolute;
+      font-size: 13px;
+      */
+      width: 30px;
+      height: 30px;
+      background-size: contain;
+      display: inline-block;
+      line-height: 60px;
+      padding-left: 5px;
+      /* left: 23px !important; */
+      font-size: 13px;
+      /*position: relative;
+      top: 10px;
+      font-size: 13px;
+      top: 14px !important;
+      margin-left: 11px;
+      margin-top: -4px;
+      padding-left: 3px;*/
+      position: absolute; }
+    .game #map .mapelBob {
+      left: 0;
+      top: 25px; }
+    .game #map .mapelTom {
+      right: 0;
+      top: 25px; }
+    .game #map .mapelRon {
+      left: 0;
+      bottom: 11px; }
+    .game #map .mapelMax {
+      bottom: 11px;
+      right: 0; }
+    .game #map .mapelshelter {
+      background: url("./../assets/camp.png");
+      color: transparent;
+      background-size: contain;
+      width: 20px;
+      height: 20px;
+      position: relative;
+      top: 4px;
+      /* left: 35px; */
+      /* margin: 4px; */
+      display: inline-block;
+      margin: 0 auto;
+      left: 10px;
+      margin-left: 5px; }
+    .game #map .mapelfishland {
+      background: url("./../assets/fish2.png");
+      color: transparent;
+      background-size: contain;
+      width: 20px;
+      height: 20px;
+      position: relative;
+      top: 4px;
+      display: inline-block;
+      margin: 0 auto;
+      left: 10px;
+      margin-left: 5px; }
+    .game #map .mapelwspring {
+      background: url("./../assets/water.png");
+      color: transparent;
+      background-size: contain;
+      width: 20px;
+      height: 20px;
+      position: relative;
+      top: 4px;
+      display: inline-block;
+      margin: 0 auto;
+      left: 10px;
+      margin-left: 5px; }
+    .game #map .mapelfruitland {
+      background: url("./../assets/banana.png");
+      color: transparent;
+      background-size: contain;
+      width: 20px;
+      height: 20px;
+      position: relative;
+      top: 4px;
+      display: inline-block;
+      margin: 0 auto;
+      left: 10px;
+      margin-left: 5px; }
+  .game #mapImg {
+    background: url("./../assets/island2.png");
+    width: 700px;
+    height: 700px;
+    position: absolute;
+    background-size: cover;
+    z-index: 1;
+    margin-left: 50px; }
+  .game .gameinfo {
+    margin: 20px;
+    height: 54px; }
+    .game .gameinfo #nextTurn {
+      width: 200px;
+      font-size: 16px;
+      float: right;
+      position: relative; }

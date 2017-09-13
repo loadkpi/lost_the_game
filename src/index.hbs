@@ -16,25 +16,36 @@
       <table>
         <tr>
           <td>
-            <div class="s sBob" id="sBob"></div>
+            <div class="s sBob win" id="sBob"></div>
           </td>
           <td rowspan="2" class="mapWrap">
+            <div id="mapImg"></div>
             <table class="map" id="map"></table>
           </td>
           <td>
-            <div class="s sTom" id="sTom"></div>
+            <div class="s sTom win" id="sTom"></div>
           </td>
         </tr>
         <tr>
           <td>
-            <div class="s sRon" id="sRon"></div>
+            <div class="s sRon win" id="sRon"></div>
           </td>
           <td>
-            <div class="s sMax" id="sMax"></div>
+            <div class="s sMax win" id="sMax"></div>
           </td>
         </tr>
+        <tr>
+          <td></td>
+          <td>
+            <div class="win gameinfo">
+              <div class="name">Game and Stock info</div>
+              <div id="stock"></div>
+              <button id="nextTurn">Next Turn</button>
+            </div>
+          </td>
+          <td></td>
+        </tr>
       </table>
-      <button id="nextTurn">Next Turn</button>
     </div>
     {{#if js}}
       <script>

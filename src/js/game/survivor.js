@@ -1,7 +1,8 @@
 import BaseClass from './../lib/base.js';
 
 import {GameMapHelper} from './map.js';
-
+import Signal from './signal.js';
+import Shelter from './shelter.js';
 
 var Survivor = BaseClass.extend({
   element_name: 'survivor',
@@ -35,23 +36,9 @@ var Survivor = BaseClass.extend({
     this.fishing = 1 + parseInt(Math.random() * 3);
     this.fruit_picking = 7 + parseInt(Math.random() * 3);
     // this.hunting = parseInt(Math.random() * 10);
-    //emitter.emit('boom');
-    //emitter.emit('boom');
     this.d = new SurvivorDisplay(this);
   },
   display(gmap) {
-    // if (gmap === undefined) {
-    //   gmap = this.gmap;
-    // }
-    //this.gmap = gmap;
-
-    //console.log(this);
-    
-
-    //console.log(11);
-    // console.log('coordinate ' + this.coordinate);
-    //console.log(gmap.get_by_index(this.coordinate));
-    // console.log(gmap.get_by_index(this.coordinate));
     this.resetActions();
     gmap.get_by_index(this.coordinate).forEach( ent => {
       console.log(ent.name);
@@ -71,13 +58,10 @@ var Survivor = BaseClass.extend({
         case 'wspring':
           this.canWater = true;
           break;
-      }
-      //console.log(this.canWater);
-      
+      }      
     });
 
     //let d = new SurvivorDisplay(this);
-    
 
     gmap.set_by_index(this.coordinate, this);
     
@@ -98,15 +82,9 @@ var Survivor = BaseClass.extend({
     this.currentJob = 'move';
     this.targetCoordinate = coord;
     console.log('move_to');
-    //this.name = 'name ' + parseInt(Math.random(1) * 100);
 
     console.log(this.coordinate);
-    //console.log(coord);
-    //return false;
     
-    //this.is_active = true;
-    //console.log(GameMapHelper);
-
     let x = GameMapHelper.index_to_x(coord);
     let y = GameMapHelper.index_to_y(coord); 
 
@@ -120,15 +98,11 @@ var Survivor = BaseClass.extend({
     let minus_coord_x = - plus_coord_x;
     let plus_coord_y  = GameMapHelper.x_y_to_index(0, 1);
     let minus_coord_y = - plus_coord_y;
-    //console.log(GameMapHelper.index_to_x(1));
-    //console.log(plus_coord_x + plus_coord_y);
 
     if (coord_x < x && coord_y < y) {
       this.next_events.push(() => {this.coordinate += plus_coord_x + plus_coord_y; })
-      //G.next_turn_event(() => {this.coord_x += 1; this.coord_y += 1});
     } else if (coord_x > x && coord_y > y) {
       this.next_events.push(() => {this.coordinate += minus_coord_x + minus_coord_y; })
-      //G.next_turn_event(() => {this.coord_x -= 1; this.coord_y -= 1});
     } else if (coord_x > x && coord_y < y) {
       this.next_events.push(() => {this.coordinate += minus_coord_x + plus_coord_y; })
     } else if (coord_x < x && coord_y > y) {
@@ -136,30 +110,37 @@ var Survivor = BaseClass.extend({
     } else {
       if (coord_x < x) { 
         this.next_events.push(() => {this.coordinate += plus_coord_x;})
-        //G.next_turn_event(() => this.coord_x += 1);
       } else if (coord_x > x) {
         this.next_events.push(() => {this.coordinate -= plus_coord_x;})
-        //G.next_turn_event(() => this.coord_x -= 1);
       } else if (coord_y < y) {
         this.next_events.push(() => {this.coordinate += plus_coord_y;})
-        //G.next_turn_event(() => this.coord_y += 1);
       } else if (coord_y > y) {
         this.next_events.push(() => {this.coordinate -= plus_coord_y;})
-        //G.next_turn_event(() => this.coord_y -= 1);
       }
     }
 
     if (x == coord_x && y == coord_y) {
       console.log('stop');
       this.currentJob = false;
+      if (coord == 16) {
+        this.goShelter();
+      }
       //this.targetCoordinate = -1;
     } else {
       // console.log('next move');
       this.next_events.push(() => {this.move_to(coord)});
-      //this.next_events.push(() => {this.display()});
-      //G.next_turn_event(() =>this.move_to(x, y));
     }
   },
+  goShelter() {
+    Shelter.fish   += this.bagFish;
+    Shelter.water  += this.bagWater;
+    Shelter.fruits += this.bagFruits;
+
+    this.bagFish   = 0;
+    this.bagWater  = 0;
+    this.bagFruits = 0;
+  },
+
 
   goFishing() {
     this.currentJob = 'fishing';
@@ -213,6 +194,18 @@ var Survivor = BaseClass.extend({
 
   goSignal() {
     this.currentJob = 'b_signal';
+    SignalClass.onFire = true;
+    this.next_events.push( () => this.checkSignal() );
+  },
+  checkSignal() {
+    if (this.currentJob = 'b_signal') {
+      SignalClass.onFire = true;
+      this.next_events.push( () => this.checkSignal() );
+    } else {
+      if (Math.floor(Math.random() * 3) == 0) {
+        SignalClass.onFire = false;
+      }
+    }
   }
 });
 
@@ -224,37 +217,22 @@ var SurvivorDisplay = BaseClass.extend({
   },
   handleEvent(event) {
     this.target_element = event.target || event.srcElement;
-    // console.log(this.target_element.type);
-    // console.log(this.target_element.className);
-    //if (11 || event.type == 'click' && this.target_element.type != 'submit') {
     if (this.target_element.className != 'cancel') {
-      // console.log('ADD 1')
-      //console.log(this.target_element.id);
 
       document.querySelectorAll('.s').forEach(el => el.classList.remove('active'));
-      //document.getElementsByClassName('map')[0].classList.remove('moveOn');
-      
+
       //temp
       //document.getElementById('map').querySelectorAll('td').forEach(el => el.classList.remove('moveTarget'));
       
       this.dom_element.classList.add('active');
-      //if (this.base.targetCoordinate > 0 && this.mapCellEl) {
-      //console.log(this.mapCellEl);
 
-      //document.getElementById('map').querySelectorAll('td').forEach(el => el.classList.remove('moveTarget'));
-      // console.log(this.mapCellEl);
       if (this.mapCellEl && this.mapCellEl.target_element) {
-        //console.log(this.mapCellEl.target_element);
-        // console.log('ADD 2');
         this.mapCellEl.target_element.classList.add('moveTarget');
-        //console.log('ollooo');
       }
-      // .is_active ????
+      // .is_active ???? 
     }
   },
   render() {
-    //console.log(this.name);
-    //console.log(this.element);
     let html = `<div class="name">${this.base.name}</div>`; 
     html += '<img src="" class="avatar">';
     if (!this.base.is_alive) {
@@ -263,18 +241,18 @@ var SurvivorDisplay = BaseClass.extend({
       html += '<div class="status">';
        html += '<div class="job">Waiting</div>';
        html += `<div class="health">Health: ${this.base.health}</div>`;
-       html += `<div class="fruit_food">Fruits: ${this.base.fruit_food}</div>`;
-       html += `<div class="fish_food">Fish: ${this.base.fish_food}</div>`;
-       html += `<div class="water">Water: ${this.base.water}</div>`;
+       html += `<div class="fruit_food">Wants fruits: ${this.base.fruit_food}</div>`;
+       html += `<div class="fish_food">Wants fish: ${this.base.fish_food}</div>`;
+       html += `<div class="water">Wants water: ${this.base.water}</div>`;
       html += '</div>';
       html += '<div class="actions">';
        html += '<button class="move">Move</button>';
        html += '<button class="g_water">Water</button>';
        html += '<button class="fishing">Fishing</button>';
        html += '<button class="picking_fruit">Pikcing Fruits</button>';
-       html += '<button class="b_shelter">Build Shelter</button>';
+       html += '<button class="b_shelter" style="display: none">Build Shelter</button>';
        html += '<button class="b_signal">Build Signal</button>';
-       html += '<button class="guard">Guard</button>';
+       html += '<button class="guard" style="display: none">Guard</button>';
        html += '<button class="cancel">Cancel</button>';
       html += '</div>';
       html += '<div class="bag">';
@@ -292,26 +270,14 @@ var SurvivorDisplay = BaseClass.extend({
     this.reloadStatus();
     this.reloadBag();
 
-    // this.moveButtonEl = new MoveElementClass(this);
-    // this.dom_element.getElementsByClassName('move')[0].addEventListener("click", this.moveButtonEl);
-    // console.log('addEventListener 1');
-
-    //this.dom_element.addEventListener("click", this);
+    this.dom_element.addEventListener("click", this);
   },
   reloadBag() {
-    // console.log(this.dom_element.getElementsByClassName('bFruits')[0].textContent);
     this.dom_element.getElementsByClassName('bFruits')[0].textContent = this.base.bagFruits;
     this.dom_element.getElementsByClassName('bFish')[0].textContent = this.base.bagFish;
     this.dom_element.getElementsByClassName('bWater')[0].textContent = this.base.bagWater;
   },
   reloadActions() {
-      // canMove: true,
-      // canFishing: false,
-      // canFruits: false,
-      // canShelter: false,
-      // canSignal: false,
-      // canWater: false,
-    //console.log( this.dom_element.getElementsByTagName('button') ); 
     this.dom_element.querySelectorAll('button').forEach(el => el.setAttribute("disabled", "disabled"));
 
     if (this.base.currentJob) {
@@ -345,11 +311,6 @@ var SurvivorDisplay = BaseClass.extend({
       console.log('addEventListener 1');
     // }
 
-    // if (!this.mapCellEl) {
-      // this.mapCellEl = new MapCellElementClass(this);
-      // document.getElementById('map').querySelectorAll('td').forEach(el => el.addEventListener("click", this.mapCellEl));
-      // console.log('addEventListener 11');
-    // }
     this.dom_element.getElementsByClassName('fishing')[0].removeEventListener("click", this.fishingButtonEl);
     this.fishingButtonEl = new FishingElementClass(this);
     this.dom_element.getElementsByClassName('fishing')[0].addEventListener("click", this.fishingButtonEl);
@@ -442,18 +403,6 @@ var PikcingFruitElementClass = BaseClass.extend({
 });
 
 var BShelterElementClass = BaseClass.extend({
-  // init(survivorDisplay) {
-  //   this.base_element = survivorDisplay;
-  //   this.base_dom_element = this.base_element.dom_element;
-  //   this.dom_element = this.base_dom_element.getElementsByClassName('b_shelter')[0];
-  // },
-  // handleEvent(event) {
-  //   if (event.type == 'click') {
-  //     this.base_element.base.goFishing();
-  //     this.base_element.reloadActions();
-  //     this.base_element.reloadStatus();
-  //   }
-  // }
 
 });
 
@@ -498,26 +447,12 @@ var CancelElementClass = BaseClass.extend({
       this.base_element.base.currentJob = false;
       this.base_element.base.currentJobTime = 0;
       this.base_element.base.next_events = [];
-      //this.base_dom_element.getElementsByClassName('job')[0].textContent = 'Waiting';
       this.base_element.reloadActions();
       this.base_element.reloadStatus();
-      //this.base_element.removeMoveTarget();
-      // console.log( document.getElementById('map').querySelectorAll('td') );
-      //alert(2);
-      // console.log(document.getElementById('map').getElementsByClassName('moveTarget'));
 
       //temp
       document.getElementById('map').querySelectorAll('td').forEach(el => el.classList.remove('moveTarget'));
 
-      //document.getElementById('map').getElementsByClassName('moveTarget')[0].classList.remove('moveTarget');
-      // alert(2);
-      // document.getElementById('map').querySelectorAll('td.moveTarget').forEach(el => {
-      //   console.log(el.classList);
-      //   el.classList.remove('moveTarget')
-      //   console.log(el.classList);
-      // });
-      // alert(1);
-      //this.base_element.base.mapCellEl = false;
     }
   }
 });
@@ -532,11 +467,10 @@ var MoveElementClass = BaseClass.extend({
     console.log(event.type);
     if (event.type == 'click') {
       this.base_element.base.next_events = [];
-      //this.base_dom_element.getElementsByClassName('job')[0].textContent = 'Moving...'
 
       this.dom_element.setAttribute("disabled", "disabled");
 
-      //temo
+      //temp
       // this.dom_element.removeEventListener("click", this.base_element.moveButtonEl);
 
       document.getElementById('map').classList.add('moveOn');
@@ -560,23 +494,17 @@ var MapCellElementClass = BaseClass.extend({
     this.base_element = survivorDisplay;
     this.base_dom_element = this.base_element.dom_element;
     this.dom_element_arr = document.getElementById('map').querySelectorAll('td');
-    // console.log(this.base_element.name);
   },
   handleEvent(event) {
     console.log(event.type);
-    // console.log(this.base_element.name);
     if (event.type == 'click') {
       document.getElementById('map').querySelectorAll('td').forEach(el => el.removeEventListener("click", this.base_element.mapCellEl));
-      
+
       this.target_element = event.target || event.srcElement;
-//        console.log(targetElement);
 
       document.getElementsByClassName('map')[0].classList.remove('moveOn');
       //temp
       // this.dom_element_arr.forEach(el => el.removeEventListener("click", this.base_element.mapCellEl));
-
-      //this.base_dom_element.getElementsByClassName('move')[0].removeAttribute('disabled');
-      //this.base_dom_element.getElementsByClassName('move')[0].addEventListener("click", this.base_element.moveButtonEl);
 
       this.target_element.classList.add('moveTarget');
 
@@ -591,11 +519,5 @@ var MapCellElementClass = BaseClass.extend({
   }
 });
 
-// var SurvivorProfileElementClass = BaseClass.extend({
-//   init(survivorDisplay) {
-//     this.base_element = survivorDisplay;
-//     this.dom_element_arr = document.getElementById('map').querySelectorAll('td');
-//   },
-// }); 
 
 export default Survivor;

@@ -3,8 +3,9 @@ import BaseClass from './../lib/base.js';
 import {GameMapHelper} from './map.js';
 import Element from './element.js';
 
-var Signal = Element.extend({
+var SignalClass = Element.extend({
   name: 'signal',
+  onFire: false,
 
   init() {
     let vars = [];
@@ -13,5 +14,5 @@ var Signal = Element.extend({
     this.generate_coordinate(vars);
   }
 });
-
+var Signal = new SignalClass();
 export default Signal;

@@ -1,47 +1,170 @@
 .game {
+  background: #99b3cc;
+  background: #008080;
+  padding: 5px;
+
+  .win {
+    background: #bfbfbf;
+    border: 1px solid;
+    border-top-color: #dfdfdf;
+    border-left-color: #dfdfdf;
+    border-right-color: #808080;
+    border-bottom-color: #808080;
+    box-shadow: 1px 1px 0 0 #000;
+    .name {
+      margin: 2px 2px 0;
+      padding: 1px 2px;
+      color: #fff;
+      background: -webkit-linear-gradient(left, #7b7b7b, #adadad);
+      background: linear-gradient(to right, #7b7b7b, #adadad);
+      font-weight: bold;
+      font-size: 13px;
+      line-height: 16px;
+    } 
+  }
+
+  button {
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: none;
+  font-size: 12px;
+  font-family: Tahoma, Verdana;
+  color: #070707;
+  background: #bfbfbf;
+  border: 1px solid;
+  border-top-color: #dfdfdf;
+  border-left-color: #dfdfdf;
+  border-right-color: #808080;
+  border-bottom-color: #808080;
+  box-shadow: 1px 1px 0 0 #000;
+  text-align: center;
+  outline: none;
+  padding: 4px;
+  cursor: default;
+  margin: 3px 1px;
+}
+ button:enabled {
+    color: #070707;
+  }
+   button:disabled {
+    color: #818181;
+    text-shadow: 1px 1px #fff;
+  }
+   button:active:enabled {
+    box-shadow: 1px 1px 0 0 #000 inset;
+    border-top-color: #808080;
+    border-left-color: #808080;
+    border-right-color: #dfdfdf;
+    border-bottom-color: #dfdfdf;
+  }
+
   > table {
-    margin: 20px auto;
+    margin: 0 auto;
     td {
       vertical-align: top;
       width: 140px;
       &.mapWrap {
         width: 800px;
+        background: #99b3cc;
       }
     }
   }
 
+
   .s {
-    width: 120px;
-    height: 300px;
-    border: 1px black solid;
+    width: 160px;
+    height: 320px;
+    //border: 1px black solid;
     cursor: pointer;
+    //background: #feecc0;
+    //border-radius: 5px;
+    font-size: 13px;
+    line-height: 16px;
+    margin: 0 4px;    
     
     &.active {
-      border: 3px green solid;
+      //border: 3px green solid;
+      .name {
+        background: -webkit-linear-gradient(left, #000080, #1084d0);
+        background: linear-gradient(to right, #000080, #1084d0);
+      }
     }
 
     img {
       width: 100%;
     }
+    
     .status {
-      border-top: 1px black solid;
+      margin-top: -15px;
+      //border-top: 1px black solid;
       border-bottom: 1px black solid;
-      padding: 10px 0;
+      //padding: 10px 0;
+      .job {
+        border-bottom: 1px black solid;
+        line-height: 20px;
+      }
     }
     .actions {
       padding: 10px 0;
     }
     .bag {
       padding: 10px 0;
+      border-top: 1px black solid;
+
+      .bFruits {
+        background: url('./../assets/banana.png'); 
+        background-size: contain;
+        background-repeat: no-repeat;;
+        width: 20px;
+        height: 20px;
+        padding-left: 8px;
+        //margin-top: 10px;
+        //top: 10px;
+        position: relative;;
+        line-height: 60px;
+        margin: 3px 10px;
+        display: inline-block;;
+      }
+      .bFish {
+        background: url('./../assets/fish2.png'); 
+        background-size: contain;
+        background-repeat: no-repeat;;
+        width: 20px;
+        height: 20px;
+        padding-left: 8px;
+        //margin-top: 10px;
+        //top: 10px;
+        position: relative;;
+        line-height: 60px;
+        margin: 3px 10px;
+        display: inline-block;;
+      }
+      .bWater {
+        background: url('./../assets/water.png'); 
+        background-size: contain;
+        background-repeat: no-repeat;;
+        width: 20px;
+        height: 20px;
+        padding-left: 8px;
+        //margin-top: 10px;
+        //top: 10px;
+        position: relative;;
+        line-height: 60px;
+        margin: 3px 10px;
+        display: inline-block;;
+      }
     }
   }
 
-  .map {
+  #map {
+    z-index: 100;
+    position: relative;
+    margin: 0 auto;
     td {
       width: 100px;
       height: 100px;
-      border: 1px dashed black;
+      border: 1px dashed brown;
       box-sizing: border-box;
+      position: relative;
       &.moveTarget { 
         border: 3px orange solid;
       }
@@ -50,6 +173,128 @@
       td:hover {
         border: 3px orange solid;
       }
+    }
+
+    .mapelBob, .mapelTom, .mapelRon, .mapelMax {
+      background: url('./../assets/man.png');
+      /*
+      width: 32px;
+      height: 32px;
+      background-size: contain;
+      display: inline-block;
+      /* padding-top: 26px; 
+      line-height: 70px;
+      padding-left: 2px;
+      position: absolute;
+      font-size: 13px;
+      */
+      width: 30px;
+      height: 30px;
+      background-size: contain;
+      display: inline-block;
+      line-height: 60px;
+      padding-left: 5px;
+      /* left: 23px !important; */
+      font-size: 13px;
+      /*position: relative;
+      top: 10px;
+      font-size: 13px;
+      top: 14px !important;
+      margin-left: 11px;
+      margin-top: -4px;
+      padding-left: 3px;*/
+      position: absolute;
+    }
+    
+    .mapelBob {
+      left: 0;
+      top: 25px;
+    }
+    .mapelTom {
+      right: 0;
+      top: 25px;
+    }
+    .mapelRon {
+      left: 0;
+      bottom: 11px;
+    }
+    .mapelMax {
+      bottom: 11px;
+      right: 0;
+    }
+    
+    .mapelshelter {
+      background: url('./../assets/camp.png');
+      color: transparent;
+      background-size: contain;
+      width: 20px;
+      height: 20px;
+      position: relative;
+      top: 4px;
+      /* left: 35px; */
+      /* margin: 4px; */
+      display: inline-block;
+      margin: 0 auto;
+      left: 10px;
+      margin-left: 5px;
+    }
+    .mapelfishland {
+      background: url('./../assets/fish2.png'); 
+      color: transparent;
+      background-size: contain;
+      width: 20px;
+      height: 20px;
+      position: relative;
+      top: 4px;
+      display: inline-block;
+      margin: 0 auto;
+      left: 10px;
+      margin-left: 5px;
+    }
+    .mapelwspring {
+      background: url('./../assets/water.png'); 
+      color: transparent;
+      background-size: contain;
+      width: 20px;
+      height: 20px;
+      position: relative;
+      top: 4px;
+      display: inline-block;
+      margin: 0 auto;
+      left: 10px;
+      margin-left: 5px;
+    }
+    .mapelfruitland {
+      background: url('./../assets/banana.png'); 
+      color: transparent;
+      background-size: contain;
+      width: 20px;
+      height: 20px;
+      position: relative;
+      top: 4px;
+      display: inline-block;
+      margin: 0 auto;
+      left: 10px;
+      margin-left: 5px;
+    }
+  }
+  #mapImg {
+    background: url('./../assets/island2.png');
+    width: 700px;
+    height: 700px;
+    position: absolute;
+    background-size: cover;
+    z-index: 1;
+    margin-left: 50px;
+  }
+  .gameinfo {
+    margin: 20px;
+    height: 54px;
+    #nextTurn {
+      width: 200px;
+      font-size: 16px;
+      float: right;
+      position: relative;
     }
   }
 }
