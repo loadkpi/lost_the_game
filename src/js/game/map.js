@@ -35,7 +35,7 @@ var GameMapClass = BaseClass.extend({
   },
   
   get(x, y) {
-    this.cells.get(this.x_y_to_index(x, y));  
+    return this.cells.get(this.x_y_to_index(x, y));  
   },
   set(x, y, val) {
     this.cells.set_by_index(this.x_y_to_index(x, y), val);
@@ -48,6 +48,9 @@ var GameMapClass = BaseClass.extend({
     // console.log('set on ' + index);
     // console.log(val);
     this.cells.set(index, this.cells.get(index).add(val));
+  },
+  get_by_index(index) {
+    return this.cells.get(index);
   },
 
   clear_cells() {
@@ -70,7 +73,7 @@ var GameMapClass = BaseClass.extend({
   },
 
   display() {
-    console.log('display');
+    //console.log('display');
     let d = new GameMapDisplay(this);
     d.render();
   }
